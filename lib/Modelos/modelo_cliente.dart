@@ -2,9 +2,9 @@
 class Cliente {
   String id;
   String tipo;
-  int doc;
+  dynamic doc;
   String nombre;
-  int celular;
+  dynamic celular;
   String direccion;
   String correo;
   String estado;
@@ -25,9 +25,9 @@ class Cliente {
     return Cliente(
       id: json["_id"],
       tipo: json["tipo"],
-      doc: json["doc"] as int,
+      doc: int.parse(json["doc"]) ,
       nombre: json["nombre"],
-      celular: json["celular"]as int ,
+      celular: json["celular"] ,
       direccion: json["direccion"],
       correo: json["correo"],
       estado: json["estado"],

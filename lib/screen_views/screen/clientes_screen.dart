@@ -1,7 +1,8 @@
+import 'package:apis_proyecto/apis/api_clientes.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:apis_proyecto/Modelos/modelo_cliente.dart';
+// import 'package:apis_proyecto/Modelos/modelo_cliente.dart';
 
 class HomePagedos extends StatefulWidget {
   const HomePagedos({Key? key}) : super(key: key);
@@ -14,7 +15,9 @@ class _HomePagedosState extends State<HomePagedos> {
   int _currentIndex = 0;
   bool _isLoading = true;
   List<Cliente> clientes = [];
-  Cliente? _selectedCliente; // Usuario seleccionado para edición
+  Cliente? _selectedCliente;
+  List<String> seleccioEstado = ['activo', 'inactivo'];
+  bool _modalOpen = false;
 
   @override
   void initState() {
@@ -68,10 +71,24 @@ class _HomePagedosState extends State<HomePagedos> {
                   },
                 ),
                 TextFormField(
+                  initialValue: clientes.doc.toString(),
+                  decoration: const InputDecoration(labelText: 'Documento'),
+                  onChanged: (value) {
+                    clientes.doc = int.parse(value);
+                  },
+                ),
+                TextFormField(
                   initialValue: clientes.nombre,
                   decoration: const InputDecoration(labelText: 'nombre'),
                   onChanged: (value) {
                     clientes.nombre = value;
+                  },
+                ),
+                TextFormField(
+                  initialValue: clientes.celular.toString(),
+                  decoration: const InputDecoration(labelText: 'Celular'),
+                  onChanged: (value) {
+                    clientes.celular = int.parse(value);
                   },
                 ),
                 TextFormField(
@@ -121,9 +138,11 @@ class _HomePagedosState extends State<HomePagedos> {
   void _saveChangesAndCloseModal(Cliente clientes) async {
     // Construye el cuerpo de la solicitud con los datos actualizados.
     Map<String, dynamic> requestBody = {
-      "id": clientes.id,
+      "_id": clientes.id,
       "tipo": clientes.tipo,
+      "doc": clientes.doc,
       "nombre": clientes.nombre,
+      "celular": clientes.celular,
       "direccion": clientes.direccion,
       "correo": clientes.correo,
       "estado": clientes.estado,
@@ -131,8 +150,7 @@ class _HomePagedosState extends State<HomePagedos> {
     };
 
     try {
-      String url =
-          "https://apisflutter.onrender.com/api/cliente${clientes.nombre}";
+      String url = "https://apisflutter.onrender.com/api/cliente";
 
       final response = await http.put(
         Uri.parse(url),
@@ -143,10 +161,9 @@ class _HomePagedosState extends State<HomePagedos> {
       );
 
       if (response.statusCode == 200) {
-        // Cambios guardados con éxito en la API.
-        print('Cambios guardados con éxito.');
+        print('Cambios guardados con exito.');
+        if (mounted && _modalOpen) {}
       } else {
-        // Error al guardar los cambios.
         print('Error al guardar los cambios.');
       }
     } catch (e) {
@@ -157,7 +174,30 @@ class _HomePagedosState extends State<HomePagedos> {
       _selectedCliente = null;
     });
 
-    Navigator.of(context).pop(); // Cierra el modal.
+    Navigator.of(context).pop();
+  }
+
+  void _deleteCliente(cliente) async {
+    try {
+      String url = "https://apisflutter.onrender.com/api/cliente";
+      http.Response res = await http.delete(Uri.parse(url),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'_id': cliente}));
+      if (res.statusCode == 200) {
+        // El registro se eliminó correctamente
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cliente eliminado correctamente')),
+        );
+        _getData();
+      } else {
+        // Se produjo un error al eliminar el registro
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al eliminar el cliente')),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   @override
@@ -165,8 +205,21 @@ class _HomePagedosState extends State<HomePagedos> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 196, 81, 231),
-        title: const Center(
-          child: Text('Listado de clientes'),
+        title: Row(
+          children: <Widget>[
+            const Expanded(
+              child: Center(
+                child: Text('Listado de clientes'),
+              ),
+            ),
+            
+            IconButton(
+              icon: Icon(Icons.auto_mode_sharp),
+              onPressed: () {
+                _getData();
+              },
+            ),
+          ],
         ),
       ),
       body: Center(
@@ -182,34 +235,174 @@ class _HomePagedosState extends State<HomePagedos> {
                     itemBuilder: (context, index) {
                       final cliente = clientes[index];
                       return ListTile(
-                        title: Column(
-                          children: [
-                            Text("Id: ${clientes[index].id}"),
-                          ],
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text("Tipo: ${clientes[index].tipo}"),
-                            Text("Documento: ${clientes[index].doc}"),
-                            Text("Nombre: ${clientes[index].nombre}"),
-                            Text("Celular: ${clientes[index].celular}"),
-                            Text("Direccion: ${clientes[index].direccion}"),
-                            Text("Estado: ${clientes[index].estado}"),
-                            Text("Contraseña: ${clientes[index].contrasena}"),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            // Abre el modal de edición cuando se toca el botón de edición.
-                            setState(() {
-                              _selectedCliente = cliente;
-                            });
-                            _showEditModal(cliente);
-                          },
-                        ),
-                      );
+                          title: Column(
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Id: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].id,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Tipo: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].tipo,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Documento: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].doc.toString(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Nombre: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].nombre,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Celular: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].celular.toString(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Dirección: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].direccion,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Correo: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].correo,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Estado: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].estado,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Contraseña: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: clientes[index].contrasena,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(
+                                color: Colors.purple,
+                                thickness: 1,
+                              ),
+                              const SizedBox(
+                                height: 1,
+                              )
+                            ],
+                          ),
+                          trailing:
+                              Row(mainAxisSize: MainAxisSize.min, children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.purple,
+                              ),
+                              onPressed: () {
+                                // Abre el modal de edición cuando se toca el botón de edición.
+                                setState(() {
+                                  _selectedCliente = cliente;
+                                });
+                                _showEditModal(cliente);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.purple,
+                              ),
+                              onPressed: () {
+                                // Abre el modal de edición cuando se toca el botón de edición.
+                                _deleteCliente(cliente.id);
+                              },
+                            ),
+                          ]));
                     },
                   ),
                 ),

@@ -18,3 +18,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+neon_widgets: ^1.0.0

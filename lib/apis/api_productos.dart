@@ -1,22 +1,21 @@
 import 'dart:convert';
-// import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'package:apis_proyecto/screen_views/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:apis_proyecto/componentes/input.dart';
-// import 'package:apis_proyecto/screen_views/screen/clientes_screen.dart';
+import 'package:apis_proyecto/screen_views/screen/clientes_screen.dart';
 
-class Clientes extends StatefulWidget {
-  const Clientes({Key? key}) : super(key: key);
+class Productos extends StatefulWidget {
+  const Productos({Key? key}) : super(key: key);
 
   @override
-  State<Clientes> createState() => _ClientesState();
+  State<Productos> createState() => _ProductosState();
 }
 
-class _ClientesState extends State<Clientes> {
+class _ProductosState extends State<Productos> {
   int _currentIndex = 0; // Agrega esta línea para inicializar _currentIndex
   bool _isLoading = true;
-  List<Cliente> clientes = [];
+  List<Producto> productos = [];
 
   @override
   void initState() {
@@ -26,11 +25,11 @@ class _ClientesState extends State<Clientes> {
 
   _getData() async {
     try {
-      String url = "https://apisflutter.onrender.com/api/cliente";
+      String url = "https://apisflutter.onrender.com/api/producto";
       http.Response res = await http.get(Uri.parse(url));
       if (res.statusCode == 200) {
-        List<dynamic> jsonData = json.decode(res.body)["clientes"];
-        clientes = jsonData.map((item) => Cliente.fromJson(item)).toList();
+        List<dynamic> jsonData = json.decode(res.body)["productos"];
+        productos = jsonData.map((item) => Producto.fromJson(item)).toList();
         setState(() {
           _isLoading = false;
         });
@@ -45,19 +44,19 @@ class _ClientesState extends State<Clientes> {
     }
   }
 
-  void _deleteCliente(String clienteId) async {
+  void _deleteProducto(String productoId) async {
     try {
-      String url = "https://apisflutter.onrender.com/api/cliente/$clienteId";
+      String url = "https://apisflutter.onrender.com/api/producto/$productoId";
       http.Response res = await http.delete(Uri.parse(url));
       if (res.statusCode == 200) {
         // El registro se eliminó correctamente
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Cliente eliminado correctamente')),
+          const SnackBar(content: Text('Producto eliminado correctamente')),
         );
       } else {
         // Se produjo un error al eliminar el registro
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al eliminar el cliente')),
+          SnackBar(content: Text('Error al eliminar')),
         );
       }
     } catch (e) {
@@ -69,7 +68,7 @@ class _ClientesState extends State<Clientes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Clientes'),
+        title: const Text('Lista de Productos'),
       ),
       body: Center(
         // Envuelve todo el contenido con Center
@@ -89,24 +88,23 @@ class _ClientesState extends State<Clientes> {
                 )
               : Center(
                   child: ListView.builder(
-                    itemCount: clientes.length,
+                    itemCount: productos.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Column(
                           children: [
-                            Text("Nombre: ${clientes[index].nombre}"),
+                            Text("Nombre: ${productos[index].nombre}"),
                           ],
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("Tipo: ${clientes[index].tipo}"),
-                            Text("Documento: ${clientes[index].doc}"),
-                            Text("Nombre: ${clientes[index].nombre}"),
-                            Text("Celular: ${clientes[index].celular}"),
-                            Text("Direccion: ${clientes[index].direccion}"),
-                            Text("Estado: ${clientes[index].estado}"),
-                            Text("Contraseña: ${clientes[index].contrasena}"),
+                            Text("nombre: ${productos[index].nombre}"),
+                            Text("precio: ${productos[index].precio}"),
+                            Text("cantidad: ${productos[index].cantidad}"),
+                            Text(
+                                "descripcion: ${productos[index].descripcion}"),
+                            Text("Estado: ${productos[index].estado}"),
                           ],
                         ),
                         // Puedes agregar más detalles aquí si es necesario
@@ -125,7 +123,7 @@ class _ClientesState extends State<Clientes> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'Clientes',
+            label: 'Productos',
             backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
@@ -148,65 +146,54 @@ class _ClientesState extends State<Clientes> {
   }
 }
 
-class Cliente {
+class Producto {
   String id;
-  String tipo;
-  dynamic doc;
   String nombre;
-  dynamic celular;
-  String direccion;
-  String correo;
+  dynamic precio;
+  dynamic cantidad;
+  String descripcion;
   String estado;
-  String contrasena;
 
-  Cliente(
-      {required this.id,
-      required this.tipo,
-      required this.doc,
-      required this.nombre,
-      required this.celular,
-      required this.direccion,
-      required this.correo,
-      required this.estado,
-      required this.contrasena});
+  Producto({
+    required this.id,
+    required this.nombre,
+    required this.precio,
+    required this.cantidad,
+    required this.descripcion,
+    required this.estado,
+  });
 
-  factory Cliente.fromJson(Map<String, dynamic> json) {
-    return Cliente(
+  factory Producto.fromJson(Map<String, dynamic> json) {
+    return Producto(
       id: json["_id"],
-      tipo: json["tipo"],
-      doc: json["doc"],
       nombre: json["nombre"],
-      celular: json["celular"],
-      direccion: json["direccion"],
-      correo: json["correo"],
+      precio: json["precio"],
+      cantidad: json["cantidad"],
+      descripcion: json["descripcion"],
       estado: json["estado"],
-      contrasena: json["contrasena"],
     );
   }
 }
 
-Future<Cliente> createCliente(Map<String, dynamic> cliente) async {
+Future<Producto> createProducto(Map<String, dynamic> producto) async {
   try {
     final response = await http.post(
-      Uri.parse('https://apisflutter.onrender.com/api/cliente'),
+      Uri.parse('https://apisflutter.onrender.com/api/producto'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'tipo': cliente['tipo'],
-        'doc': cliente['doc'],
-        'nombre': cliente['nombre'],
-        'celular': cliente['celular'],
-        'direccion': cliente['direccion'],
-        'correo': cliente['correo'],
-        'estado': cliente['estado'],
-        'contrasena': cliente['contrasena']
+        'nombre': producto['nombre'],
+        'precio': producto['precio'],
+        'cantidad': producto['cantidad'],
+        'descripcion': producto['descripcion'],
+        'estado': producto['estado'],
       }),
     );
 
     if (response.statusCode == 201) {
-      final nuevoCliente = Cliente.fromJson(jsonDecode(response.body));
-      return nuevoCliente;
+      final nuevoProducto = Producto.fromJson(jsonDecode(response.body));
+      return nuevoProducto;
     } else {
       throw Exception(response.body);
     }
@@ -215,56 +202,58 @@ Future<Cliente> createCliente(Map<String, dynamic> cliente) async {
   }
 }
 
-class CrearClienteApi extends StatefulWidget {
-  CrearClienteApi({Key? key}) : super(key: key);
+class CrearProductoApi extends StatefulWidget {
+  CrearProductoApi({Key? key}) : super(key: key);
 
   @override
-  State<CrearClienteApi> createState() => _CrearClienteApiState();
+  State<CrearProductoApi> createState() => _CrearProductoApiState();
 }
 
-class _CrearClienteApiState extends State<CrearClienteApi> {
+class _CrearProductoApiState extends State<CrearProductoApi> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _tipoController = TextEditingController();
-  final TextEditingController _docController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _celularController = TextEditingController();
-  final TextEditingController _direccionController = TextEditingController();
-  final TextEditingController _correoController = TextEditingController();
+  final TextEditingController _precioController = TextEditingController();
+  final TextEditingController _cantidadController = TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
   final TextEditingController _estadoController = TextEditingController();
-  final TextEditingController _contrasenaController = TextEditingController();
 
-  final volver = Clientes;
+  volver() {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePagedos()),
+    );
+  }
 
-  Future<Cliente>? _futureCliente;
+  Future<Producto>? _futureProducto;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8.0),
-      child: (_futureCliente == null) ? _form() : _futureBuilder(),
+      child: (_futureProducto == null) ? _form() : _futureBuilder(),
     );
   }
 
-  FutureBuilder<Cliente> _futureBuilder() {
-    return FutureBuilder<Cliente>(
-      future: _futureCliente,
+  FutureBuilder<Producto> _futureBuilder() {
+    return FutureBuilder<Producto>(
+      future: _futureProducto,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Cliente creado correctamente',
+                'Producto creado correctamente',
                 style: TextStyle(fontSize: 20),
               ),
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    _futureCliente = null;
+                    _futureProducto = null;
                   });
                 },
-                child: const Text('Crear otro Cliente'),
+                child: const Text('Crear otro Producto'),
               ),
             ],
           );
@@ -283,35 +272,7 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           InputComponent(
-            label: 'tipo',
-            controller: _tipoController,
-            keyboardType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese el tipo';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 5,
-          // ),
-          InputComponent(
-            label: 'Doc',
-            controller: _docController,
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese Documento';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          InputComponent(
-            label: 'Nombre',
+            label: 'nombre',
             controller: _nombreController,
             keyboardType: TextInputType.text,
             validator: (value) {
@@ -322,15 +283,15 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
             },
           ),
           // const SizedBox(
-          //   height: 10,
+          //   height: 5,
           // ),
           InputComponent(
-            label: 'Celular',
-            controller: _celularController,
-            keyboardType: TextInputType.phone,
+            label: 'precio',
+            controller: _precioController,
+            keyboardType: TextInputType.number,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Ingrese el celular';
+                return 'Ingrese el precio';
               }
               return null;
             },
@@ -339,11 +300,12 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
           //   height: 10,
           // ),
           InputComponent(
-            label: 'Direccion',
-            controller: _direccionController,
+            label: 'cantidad',
+            controller: _cantidadController,
+            keyboardType: TextInputType.number,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Ingrese direccion';
+                return 'Ingrese la cantidad';
               }
               return null;
             },
@@ -352,12 +314,12 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
           //   height: 10,
           // ),
           InputComponent(
-            label: 'Correo',
-            controller: _correoController,
-            keyboardType: TextInputType.emailAddress,
+            label: 'descripcion',
+            controller: _descripcionController,
+            keyboardType: TextInputType.text,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Ingrese correo';
+                return 'Ingrese la descripcion';
               }
               return null;
             },
@@ -365,6 +327,11 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
           // const SizedBox(
           //   height: 10,
           // ),
+
+          // const SizedBox(
+          //   height: 10,
+          // ),
+
           InputComponent(
             label: 'Estado',
             controller: _estadoController,
@@ -379,18 +346,7 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
           // const SizedBox(
           //   height: 10,
           // ),
-          InputComponent(
-            label: 'contrasena',
-            controller: _contrasenaController,
-            obscureText: true,
-            keyboardType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese contraseña';
-              }
-              return null;
-            },
-          ),
+
           // const SizedBox(
           //   height: 10,
           // ),
@@ -398,20 +354,16 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 setState(() {
-                  _futureCliente = createCliente({
-                    'tipo': _tipoController.text,
-                    'doc': _docController.text,
+                  _futureProducto = createProducto({
                     'nombre': _nombreController.text,
-                    'celular': _celularController.text,
-                    'direccion': _direccionController.text,
-                    'correo': _correoController.text,
+                    'precio': _precioController.text,
+                    'cantidad': _cantidadController.text,
+                    'descripcion': _descripcionController.text,
                     'estado': _estadoController.text,
-                    'contrasena': _contrasenaController.text,
                   });
                 });
                 
-
-                const Text('cliente creado con exito');
+                const Text('Producto creado con exito');
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(builder: (context) => const HomePagedos()),
@@ -420,7 +372,7 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
                 print('no se pudo agregar el cliente');
               }
             },
-            child: const Text('Crear Cliente'),
+            child: const Text('Crear Producto'),
           ),
         ],
       ),
@@ -428,4 +380,4 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
   }
 }
 
-const String baseUrl = 'https://apisflutter.onrender.com/api/cliente';
+const String baseUrl = 'https://apisflutter.onrender.com/api/producto';
