@@ -1,3 +1,5 @@
+import 'package:apis_proyecto/screen_views/screen/camara.dart';
+import 'package:apis_proyecto/screen_views/screen/gps.dart';
 import 'package:flutter/material.dart';
 import 'package:apis_proyecto/screen_views/screen/clientes_screen.dart';
 import 'package:apis_proyecto/screen_views/screen/productos_screen.dart';
@@ -73,10 +75,32 @@ class HomePagetres extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 196, 81, 231),
-        title: const Center(
-          child: Text('Inicio LT'),
+        title: Row(
+          children: <Widget>[
+            const Expanded(
+              child: Center(
+                child: Text('Inicio'),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.camera),
+              onPressed: () {          
+                 final route = MaterialPageRoute(
+                    builder: (context) => const Camara());
+                Navigator.push(context, route);           
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.map_outlined),
+              onPressed: () {
+                 final route = MaterialPageRoute(
+                    builder: (context) => const Gps());
+                Navigator.push(context, route);        
+              },
+            ),
+          ],
         ),
       ),
       body: const Center(

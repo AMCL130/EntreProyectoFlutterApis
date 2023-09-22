@@ -277,154 +277,153 @@ class _CrearClienteApiState extends State<CrearClienteApi> {
 
   Form _form() {
     return Form(
-      key: _formKey,
-      // child: SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          InputComponent(
-            label: 'tipo',
-            controller: _tipoController,
-            keyboardType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese el tipo';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 5,
-          // ),
-          InputComponent(
-            label: 'Doc',
-            controller: _docController,
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese Documento';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          InputComponent(
-            label: 'Nombre',
-            controller: _nombreController,
-            keyboardType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese el nombre';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          InputComponent(
-            label: 'Celular',
-            controller: _celularController,
-            keyboardType: TextInputType.phone,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese el celular';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          InputComponent(
-            label: 'Direccion',
-            controller: _direccionController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese direccion';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          InputComponent(
-            label: 'Correo',
-            controller: _correoController,
-            keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese correo';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          InputComponent(
-            label: 'Estado',
-            controller: _estadoController,
-            keyboardType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese estado';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          InputComponent(
-            label: 'contrasena',
-            controller: _contrasenaController,
-            obscureText: true,
-            keyboardType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Ingrese contraseña';
-              }
-              return null;
-            },
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                setState(() {
-                  _futureCliente = createCliente({
-                    'tipo': _tipoController.text,
-                    'doc': _docController.text,
-                    'nombre': _nombreController.text,
-                    'celular': _celularController.text,
-                    'direccion': _direccionController.text,
-                    'correo': _correoController.text,
-                    'estado': _estadoController.text,
-                    'contrasena': _contrasenaController.text,
-                  });
-                });
-                
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InputComponent(
+                label: 'tipo',
+                controller: _tipoController,
+                keyboardType: TextInputType.text,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese el tipo';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 5,
+              // ),
+              InputComponent(
+                label: 'Doc',
+                controller: _docController,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese Documento';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              InputComponent(
+                label: 'Nombre',
+                controller: _nombreController,
+                keyboardType: TextInputType.text,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese el nombre';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              InputComponent(
+                label: 'Celular',
+                controller: _celularController,
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese el celular';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              InputComponent(
+                label: 'Direccion',
+                controller: _direccionController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese direccion';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              InputComponent(
+                label: 'Correo',
+                controller: _correoController,
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese correo';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              InputComponent(
+                label: 'Estado',
+                controller: _estadoController,
+                keyboardType: TextInputType.text,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese estado';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              InputComponent(
+                label: 'contrasena',
+                controller: _contrasenaController,
+                obscureText: true,
+                keyboardType: TextInputType.text,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese contraseña';
+                  }
+                  return null;
+                },
+              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      _futureCliente = createCliente({
+                        'tipo': _tipoController.text,
+                        'doc': _docController.text,
+                        'nombre': _nombreController.text,
+                        'celular': _celularController.text,
+                        'direccion': _direccionController.text,
+                        'correo': _correoController.text,
+                        'estado': _estadoController.text,
+                        'contrasena': _contrasenaController.text,
+                      });
+                    });
 
-                const Text('cliente creado con exito');
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const HomePagedos()),
-                // );
-              } else {
-                print('no se pudo agregar el cliente');
-              }
-            },
-            child: const Text('Crear Cliente'),
+                    const Text('cliente creado con exito');
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const HomePagedos()),
+                    // );
+                  } else {
+                    print('no se pudo agregar el cliente');
+                  }
+                },
+                child: const Text('Crear Cliente'),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 

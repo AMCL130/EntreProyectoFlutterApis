@@ -16,7 +16,7 @@ class _HomePageunoState extends State<HomePageuno> {
   bool _isLoading = true;
   List<Producto> productos = [];
   Producto? _selectedProducto;
- 
+
   bool _modalOpen = false;
 
   @override
@@ -46,10 +46,8 @@ class _HomePageunoState extends State<HomePageuno> {
     }
   }
 
-  
-
   void _showEditModal(Producto productos) {
-    showModalBottomSheet(
+    showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -75,8 +73,8 @@ class _HomePageunoState extends State<HomePageuno> {
                 TextFormField(
                   initialValue: productos.precio.toString(),
                   decoration: const InputDecoration(labelText: 'Precio'),
-                   onChanged: (value) {
-                    productos.precio= double.parse(value);
+                  onChanged: (value) {
+                    productos.precio = double.parse(value);
                   },
                 ),
                 TextFormField(
@@ -100,7 +98,6 @@ class _HomePageunoState extends State<HomePageuno> {
                     productos.estado = value;
                   },
                 ),
-               
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
@@ -108,6 +105,16 @@ class _HomePageunoState extends State<HomePageuno> {
                     _saveChangesAndCloseModal(productos);
                   },
                   child: const Text('Guardar Cambios'),
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(100, 20),
+                  ),
+                  child: const Text('Cerrar'),
                 ),
               ],
             )));
@@ -124,9 +131,8 @@ class _HomePageunoState extends State<HomePageuno> {
       "nombre": productos.nombre,
       "precio": productos.precio,
       "cantidad": productos.cantidad,
-      "descripcion": productos.descripcion,     
+      "descripcion": productos.descripcion,
       "estado": productos.estado,
-    
     };
 
     try {
@@ -216,7 +222,7 @@ class _HomePageunoState extends State<HomePageuno> {
                 );
               },
             ),
-             IconButton(
+            IconButton(
               icon: Icon(Icons.auto_mode_sharp),
               onPressed: () {
                 _getData();
@@ -246,10 +252,16 @@ class _HomePageunoState extends State<HomePageuno> {
                                     const TextSpan(
                                       text: 'Id: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: productos[index].id,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -265,10 +277,16 @@ class _HomePageunoState extends State<HomePageuno> {
                                     const TextSpan(
                                       text: 'Nombre: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: productos[index].nombre,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -279,10 +297,16 @@ class _HomePageunoState extends State<HomePageuno> {
                                     const TextSpan(
                                       text: 'Precio: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: productos[index].precio.toString(),
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -293,10 +317,17 @@ class _HomePageunoState extends State<HomePageuno> {
                                     const TextSpan(
                                       text: 'Cantidad: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
-                                      text: productos[index].cantidad.toString(),
+                                      text:
+                                          productos[index].cantidad.toString(),
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -307,10 +338,16 @@ class _HomePageunoState extends State<HomePageuno> {
                                     const TextSpan(
                                       text: 'Descripción: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: productos[index].descripcion,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -321,15 +358,20 @@ class _HomePageunoState extends State<HomePageuno> {
                                     const TextSpan(
                                       text: 'Estado: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: productos[index].estado,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            
                               const Divider(
                                 color: Colors.purple,
                                 thickness: 1,

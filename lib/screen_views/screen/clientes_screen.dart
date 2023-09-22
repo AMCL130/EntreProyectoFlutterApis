@@ -47,88 +47,115 @@ class _HomePagedosState extends State<HomePagedos> {
   }
 
   void _showEditModal(Cliente clientes) {
-    showModalBottomSheet(
+    showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-            title: const Text('Editar cliente'),
-            content: SingleChildScrollView(
-                child: Column(
-              children: <Widget>[
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  initialValue: clientes.id,
-                  decoration: const InputDecoration(labelText: 'Id'),
-                  onChanged: (value) {
-                    clientes.id = value;
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.tipo,
-                  decoration: const InputDecoration(labelText: 'Tipo'),
-                  onChanged: (value) {
-                    clientes.tipo = value;
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.doc.toString(),
-                  decoration: const InputDecoration(labelText: 'Documento'),
-                  onChanged: (value) {
-                    clientes.doc = int.parse(value);
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.nombre,
-                  decoration: const InputDecoration(labelText: 'nombre'),
-                  onChanged: (value) {
-                    clientes.nombre = value;
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.celular.toString(),
-                  decoration: const InputDecoration(labelText: 'Celular'),
-                  onChanged: (value) {
-                    clientes.celular = int.parse(value);
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.direccion,
-                  decoration: const InputDecoration(labelText: 'direccion'),
-                  onChanged: (value) {
-                    clientes.direccion = value;
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.correo,
-                  decoration: const InputDecoration(labelText: 'correo'),
-                  onChanged: (value) {
-                    clientes.correo = value;
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.estado,
-                  decoration: const InputDecoration(labelText: 'estado'),
-                  onChanged: (value) {
-                    clientes.estado = value;
-                  },
-                ),
-                TextFormField(
-                  initialValue: clientes.contrasena,
-                  decoration: const InputDecoration(labelText: 'Contrasena'),
-                  onChanged: (value) {
-                    clientes.contrasena = value;
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    // Aquí puedes guardar los cambios en la API y cerrar el modal.
-                    _saveChangesAndCloseModal(clientes);
-                  },
-                  child: const Text('Guardar Cambios'),
-                ),
-              ],
-            )));
+        return Center(
+            child: AlertDialog(
+                content: SingleChildScrollView(
+                    child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Text(
+                              'Editar cliente',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 16.0),
+                            TextFormField(
+                              initialValue: clientes.id,
+                              decoration:
+                                  const InputDecoration(labelText: 'Id'),
+                              onChanged: (value) {
+                                clientes.id = value;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.tipo,
+                              decoration:
+                                  const InputDecoration(labelText: 'Tipo'),
+                              onChanged: (value) {
+                                clientes.tipo = value;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.doc.toString(),
+                              decoration:
+                                  const InputDecoration(labelText: 'Documento'),
+                              onChanged: (value) {
+                                clientes.doc = int.parse(value);
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.nombre,
+                              decoration:
+                                  const InputDecoration(labelText: 'nombre'),
+                              onChanged: (value) {
+                                clientes.nombre = value;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.celular.toString(),
+                              decoration:
+                                  const InputDecoration(labelText: 'Celular'),
+                              onChanged: (value) {
+                                clientes.celular = int.parse(value);
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.direccion,
+                              decoration:
+                                  const InputDecoration(labelText: 'direccion'),
+                              onChanged: (value) {
+                                clientes.direccion = value;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.correo,
+                              decoration:
+                                  const InputDecoration(labelText: 'correo'),
+                              onChanged: (value) {
+                                clientes.correo = value;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.estado,
+                              decoration:
+                                  const InputDecoration(labelText: 'estado'),
+                              onChanged: (value) {
+                                clientes.estado = value;
+                              },
+                            ),
+                            TextFormField(
+                              initialValue: clientes.contrasena,
+                              decoration: const InputDecoration(
+                                  labelText: 'Contrasena'),
+                              onChanged: (value) {
+                                clientes.contrasena = value;
+                              },
+                            ),
+                            const SizedBox(height: 16.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Aquí puedes guardar los cambios en la API y cerrar el modal.
+                                _saveChangesAndCloseModal(clientes);
+                              },
+                              child: const Text('Guardar Cambios'),
+                            ),
+                            const SizedBox(height: 16.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(100, 20),
+                              ),
+                              child: const Text('Cerrar'),
+                            ),
+                          ],
+                        )))));
       },
     );
   }
@@ -192,7 +219,7 @@ class _HomePagedosState extends State<HomePagedos> {
       } else {
         // Se produjo un error al eliminar el registro
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al eliminar el cliente')),
+          const SnackBar(content: Text('Error al eliminar el cliente')),
         );
       }
     } catch (e) {
@@ -212,7 +239,39 @@ class _HomePagedosState extends State<HomePagedos> {
                 child: Text('Listado de clientes'),
               ),
             ),
-            
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Center(
+                      child: AlertDialog(
+                        title: const Center(child: Text("Crear producto")),
+                        content: Column(children: [CrearClienteApi()]),
+                        
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              setState(() {});
+                            },
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(100, 20),
+                              ),
+                              child: const Text('Cerrar'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
             IconButton(
               icon: Icon(Icons.auto_mode_sharp),
               onPressed: () {
@@ -243,10 +302,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Id: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].id,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -262,10 +327,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Tipo: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].tipo,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -276,10 +347,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Documento: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].doc.toString(),
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -290,10 +367,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Nombre: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].nombre,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -304,10 +387,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Celular: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].celular.toString(),
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -318,10 +407,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Dirección: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].direccion,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -332,10 +427,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Correo: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].correo,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -346,10 +447,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Estado: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].estado,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -360,10 +467,16 @@ class _HomePagedosState extends State<HomePagedos> {
                                     const TextSpan(
                                       text: 'Contraseña: ',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple,
+                                      ),
                                     ),
                                     TextSpan(
                                       text: clientes[index].contrasena,
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 212, 44, 162),
+                                      ),
                                     ),
                                   ],
                                 ),
